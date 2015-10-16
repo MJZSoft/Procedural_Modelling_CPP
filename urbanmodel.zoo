@@ -1,0 +1,79 @@
+ArezooParser 1.1
+1: axiom -> T(-50,-27, -10) S(100,20,100) Subdiv(Y,99r,1r){material | city};
+3: material -> Subdiv(Y,1r,99r){sun|world};
+4: sun -> T(2.8,8,49)S(20,20,20)C(1,1,0)I('sphere');
+2: world -> T(-50,-27.1,5) Comp('all'){boxsides};
+3: boxsides -> C(0.9,0.5,0.1) I('quad');
+3: city -> S(100,0,100)Repeat(X,4){line};
+2: line -> Repeat(Z,4){area};
+3: area -> Subdiv(X,1r,2r,1r){street|housearea|street};
+4: housearea -> Subdiv(Z,1r,2r,1r){street|house1|street}:0.15 Subdiv(Z,1r,2r,1r){street|house2|street}:0.2 Subdiv(Z,1r,2r,1r){street|house3|street}:0.15 Subdiv(Z,1r,2r,1r){street|house4|street}:0.2 Subdiv(Z,3r,4r,3r){grass|forestplane|grass}:0.3 ;
+2: house1 -> S(2,4,2) Subdiv('Y',1,1,1,1) {groundfloor | floor | floor | roof1};
+3: house2 -> S(2,3,2) Subdiv('Y',1,1,1) {groundfloor2 | floor2 | roof2};
+3: house3 -> S(2,5,2) Subdiv('Y',1,1,1,1,1) {groundfloor3 | floor3 | floor3 | floor3 | roof3};
+3: house4 -> S(2,2,2) Subdiv('Y',1,1) {groundfloor | roof4};
+7: forestplane -> Subdiv(X,3r,4r,3r){grass | forest | grass};
+3: forest -> Subdiv(Y,1r,99r){grass|treearea};
+5: treearea -> Subdiv(X,1r,1r,1r,1r,1r){grass | treeline | grass | treeline | grass};
+4: treeline -> Subdiv(Z,1r,1r,1r,1r,1r){grass | tree | grass | tree| grass};
+5: tree -> S(0.3,0.3,3)C(0.2,0.8,0.2)Rx(270)I('cone'):0.4 S(0.3,0.3,2)C(0.2,0.6,0.15)Rx(270)I('cone'):0.6;
+2: roof1 -> C(1.0,0.0,0.0) I('pyramid');
+3: roof2 -> C(1.0,0.6,0.0) I('pyramid');
+3: roof3 -> C(0.6,0.3,0.3) I('pyramid');
+3: roof4 -> C(0.8,0.4,0.1) I('pyramid');
+
+
+3: floor -> Subdiv('Y',1r,2r,1r){wall1|windowblock|wall1};
+4: groundfloor -> Subdiv('Y',3r,1r){doorblock|wall1};
+5: doorblock -> Comp('front'){doorfacade1} Comp('back'){doorfacade3} Comp('left'){doorfacade2} Comp('right'){doorfacade2};
+6: doorfacade1 -> Subdiv('X',1,1){ doorarea | windowfacadearea};
+7: windowfacadearea -> Subdiv('Y',1r,2r){wall1 | windowfacade1};
+8: doorfacade2 -> Subdiv('Y',1r,2r){wall1 | windowfacade2};
+9: doorfacade3 -> Subdiv('Y',1r,2r){wall1| windowfacade1};
+10: windowblock -> Comp('front'){windowfacade1} Comp('back'){windowfacade1} Comp('left'){windowfacade2} Comp('right'){windowfacade2};
+11: windowfacade1 -> Repeat(X,0.5) {windowarea1};
+12: windowarea1 -> Subdiv(X,1r,2r,1r) {wall1 | window | wall1};
+13: windowfacade2 -> Repeat(Z,0.5) {windowarea2};
+14: windowarea2 -> Subdiv(Z,1r,2r,1r) {wall1 | window | wall1};
+15: doorarea -> Subdiv('X',1r,2r,1r) {wall1 | door | wall1};
+
+
+3: floor2 -> Subdiv('Y',1r,2r,1r){wall2|windowblock2|wall2};
+4: groundfloor2 -> Subdiv('Y',3r,1r){doorblock2|wall2};
+5: doorblock2 -> Comp('front'){doorfacade12} Comp('back'){doorfacade32} Comp('left'){doorfacade22} Comp('right'){doorfacade22};
+6: doorfacade12 -> Subdiv('X',1,1){ doorarea2 | windowfacadearea2};
+7: windowfacadearea2 -> Subdiv('Y',1r,2r){wall2 | windowfacade12};
+8: doorfacade22 -> Subdiv('Y',1r,2r){wall2 | windowfacade22};
+9: doorfacade32 -> Subdiv('Y',1r,2r){wall2| windowfacade12};
+10: windowblock2 -> Comp('front'){windowfacade12} Comp('back'){windowfacade12} Comp('left'){windowfacade22} Comp('right'){windowfacade22};
+11: windowfacade12 -> Repeat(X,0.5) {windowarea12};
+12: windowarea12 -> Subdiv(X,1r,2r,1r) {wall2 | window | wall2};
+13: windowfacade22 -> Repeat(Z,0.5) {windowarea22};
+14: windowarea22 -> Subdiv(Z,1r,2r,1r) {wall2 | window | wall2};
+15: doorarea2 -> Subdiv('X',1r,2r,1r) {wall2 | door | wall2};
+
+
+
+3: floor3 -> Subdiv('Y',1r,2r,1r){wall3|windowblock3|wall3};
+4: groundfloor3 -> Subdiv('Y',3r,1r){doorblock3|wall3};
+5: doorblock3 -> Comp('front'){doorfacade13} Comp('back'){doorfacade33} Comp('left'){doorfacade23} Comp('right'){doorfacade23};
+6: doorfacade13 -> Subdiv('X',1,1){ doorarea3 | windowfacadearea3};
+7: windowfacadearea3 -> Subdiv('Y',1r,2r){wall3 | windowfacade13};
+8: doorfacade23 -> Subdiv('Y',1r,2r){wall3 | windowfacade23};
+9: doorfacade33 -> Subdiv('Y',1r,2r){wall3| windowfacade13};
+10: windowblock3 -> Comp('front'){windowfacade13} Comp('back'){windowfacade13} Comp('left'){windowfacade23} Comp('right'){windowfacade23};
+11: windowfacade13 -> Repeat(X,0.5) {windowarea13};
+12: windowarea13 -> Subdiv(X,1r,2r,1r) {wall3 | window | wall3};
+13: windowfacade23 -> Repeat(Z,0.5) {windowarea23};
+14: windowarea23 -> Subdiv(Z,1r,2r,1r) {wall3 | window | wall3};
+15: doorarea3 -> Subdiv('X',1r,2r,1r) {wall3 | door | wall3};
+
+
+18: door -> C(0.3,0.0,0.0) I('cube');
+16: wall1 -> C(0.5,0.4,0.5) I('cube');
+17: wall2 -> C(0.5,0.6,0.5) I('cube');
+18: wall3 -> C(0.5,0.5,0.5) I('cube');
+17: window -> C(1.0,1.0,0.6) I('cube'):0.25 C(0.5,0.8,0.9) I('cube'):0.75;
+24: grass -> C(0,0.7,0) I('quad');
+25: street -> C(0.2,0.2,0.2) I('quad');
+end

@@ -1,0 +1,57 @@
+example based on office building from the paper
+
+data structure to keep all shapes indexed by rule id:
+[
+  { symbol11: [ shape11 ] },
+  { symbol21: [ shape211, shape212, shape213 ], symbol22: [ shape221, shape222 ] }
+]
+so basically map structure where keys are rule ids and values are the produced shapes after applying all rules until(including) the given one
+this structure allows us to query generated shapes and makes the visualizatoin navigatable
+
+Example:
+
+init: shapes = {}
+axiom: shapes[0] = { 'lot': [ new Shape('plane', [0, 0, 0], 200, 0, 300) ] }
+
+rule 1 applied
+shapes[1] = { 'facades':   [ new Shape('cube', [0, 0, 0], 200, building_height, 300*rand(0.3, 0.5)) ],
+              'sidewings': [ new Shape('cube', [0, 0, 300*rand(0.3, 0.5)], 200, building_height, 300 - 300*rand(0.3, 0.5)) ] }
+
+rule 2 applied
+shapes[2] = {
+              'facades':  [ new Shape('cube', [0, 0, 0], 200, building_height, 300*rand(0.3, 0.5)) ],
+              'sidewing': [ new Shape('cube', [0, 0, 300*rand(0.3, 0.5)], 200*rand(0.2, 0.6), building_height, 300 - 300*rand(0.3, 0.5)),
+                            new Shape('cube', [0, 0, 300*rand(0.3, 0.5)+200-200*rand(0.2, 0.6)], 200*rand(0.2, 0.6), building_height, 300 - 300*rand(0.3, 0.5))
+                          ]
+            }
+// you got the idea, in the following step I omitted the details
+rule 3 applied
+shapes[3] = { 'facades': [ new Shape('cube'), new Shape('cube'), new Shape('cube') ] }
+
+===================================================================================================
+
+Rules should be initialized as following. When a rule is applied shapes map structe will be modified accordingly inside rule.apply() method
+
+cmd1 = new Command('S', ['1r', 'building_height', '1r'], [])
+cmd2 = new Command('SubDiv', ['Z', '0.5 * Scope.sz', '1r'], ['facades', 'sidewings'])
+rules = []
+rules << new Rule(1, 'lot', [cmd1, cmd2])
+
+cmd1 = new Command('SubDiv', ['X', '0.6 * Scope.sx', '1r'], ['sidewing', 'epsilon'])
+cmd2 = new Command('SubDiv', ['X', '1r', '0.6 * Scope.sx'], ['epsilon', 'sidewing'])
+rules << new Rule(2, 'sidewings', [cmd1, cmd2])
+
+... etc
+
+=================================================================================================
+rule.apply() method
+each rule should have predecessor which is String, using this predecessor firstly all shapes are retrieved from shapes map structure
+then the commands are run on each of those rule one by one(move to the next shape only after running all commands on current shape).
+i.e if predecessor is sidewings all shapes will be retrieved in this case only
+Shape('cube', [0, 0, 300*rand(0.3, 0.5)], 200, building_height, 300 - 300*rand(0.3, 0.5)) then cmd1, and cmd2 will be applied subsequently.
+ATTENTION: some commands modifies predecessor itself as well(i.e S command) in this case the next subsequent command should be ran on modified shape
+
+=============================
+
+Given all these we can avoid rule and rule set things. In the modeller.model() function we just take tokenes iterate over them
+and call apply_rule(rule_id, predecessor, [commands]) private method of modeller whenever we see a new rule

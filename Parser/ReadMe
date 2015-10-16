@@ -1,0 +1,8 @@
+#Read me
+#install bison and flex
+bison -d scanner.y
+flex lexer.l
+g++ main.cpp parser.cpp scanner.cpp lexer.cpp -lfl -o main
+./main
+#change the 'urbanmodel.zoo'
+#watch the output in the console
