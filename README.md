@@ -20,7 +20,7 @@ From a terminal
 
 1) sudo apt-get update
 
--This will update your apt database to the most recent available packages.
+- This will update your apt database to the most recent available packages.
 
 2) sudo apt-get install build-essential
 
